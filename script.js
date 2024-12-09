@@ -194,4 +194,5 @@ async function startCamera() {
         console.error("Error accessing camera:", error);
         return null;
     }
-                }
+}
+    
