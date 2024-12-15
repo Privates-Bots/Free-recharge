@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #282c34;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+        }
+
+        .header p {
+            font-size: 1rem;
+            margin-top: 10px;
+            color: #ccc;
+        }
+
+        .api-section {
+            max-width: 800px;
+            margin: 20px;
+            text-align: left;
+        }
+
+        .api-section h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .api-section .endpoint {
+            border-left: 5px solid #00bcd4;
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+
+        .endpoint h3 {
+            font-size: 1.5rem;
+            color: #00bcd4;
+        }
+
+        .endpoint p {
+            font-size: 1rem;
+            color: #ccc;
+        }
+
+        .code-block {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            margin: 0;
+            padding: 0;
+        }
+
+        .copy-btn {
+            background-color: #00bcd4;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-top: 10px;
+            float: right;
+        }
+
+        .bg-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 100%);
+            animation: moveBg 5s infinite linear;
+        }
+
+        @keyframes moveBg {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 100% 100%;
+            }
+        }
+
+        .icon {
+            color: #00bcd4;
+            margin-right: 8px;
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 1rem;
+            color: #ccc;
+        }
+
+        footer a {
+            color: #00bcd4;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-animation"></div>
+
+    <div class="header">
+        <h1><i class="fas fa-code icon"></i> API Documentation</h1>
+        <p>Comprehensive guide to using our API</p>
+    </div>
+
+    <div class="api-section">
+        <h2><i class="fas fa-cogs icon"></i> Endpoint 1</h2>
+        <div class="endpoint">
+            <h3>GET /api/v1/resource</h3>
+            <p><strong>Description:</strong> Fetches resource data based on provided parameters.</p>
+            <p><strong>Parameters:</strong> <code>query</code>, <code>limit</code>, <code>offset</code></p>
+            <p><strong>Example:</strong></p>
+            <div class="code-block">
+                <pre><code>
+curl -X GET "https://api.example.com/resource?query=value&limit=10&offset=0" 
+                </code></pre>
+            </div>
+        </div>
+
+        <h2><i class="fas fa-cogs icon"></i> Endpoint 2</h2>
+        <div class="endpoint">
+            <h3>POST /api/v1/resource</h3>
+            <p><strong>Description:</strong> Creates a new resource with the given data.</p>
+            <p><strong>Body:</strong> JSON format containing <code>name</code>, <code>description</code>.</p>
+            <p><strong>Example:</strong></p>
+            <div class="code-block">
+                <pre><code>
+curl -X POST "https://api.example.com/resource" -H "Content-Type: application/json" -d '{"name":"New Resource","description":"Resource description"}'
+                </code></pre>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 API Documentation. Built with ❤️ by YourCompany. <a href="#">Learn More</a></p>
+    </footer>
+
+    <!-- Copy button script -->
+    <script>
+        const codeBlocks = document.querySelectorAll('.code-block pre');
+        codeBlocks.forEach(block => {
+            const copyBtn = document.createElement('button');
+            copyBtn.textContent = 'Copy';
+            copyBtn.className = 'copy-btn';
+            block.appendChild(copyBtn);
+
+            copyBtn.addEventListener('click', () => {
+                const code = block.querySelector('code').textContent;
+                navigator.clipboard.writeText(code)
+                    .then(() => alert('Code copied to clipboard!'))
+                    .catch(err => console.error('Failed to copy code: ', err));
+            });
+        });
+    </script>
+
+</body>
+</html>
