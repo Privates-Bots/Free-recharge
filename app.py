@@ -8,7 +8,7 @@ API_KEY = 'AIzaSyA9KagdjpK-QmGQn26JOBz0YFsXYTE2ni8'
 
 @app.route('/translate', methods=['GET'])
 def translate():
-    # Check for required parameters
+    # Get URL parameters
     to_translate = request.args.get('toTrans')
     text = request.args.get('text')
 
@@ -30,6 +30,8 @@ def translate():
     try:
         response = requests.get(url, params=params)
         response_data = response.json()
+        
+        print(response_data)  # Debugging line to log response
 
         if 'data' in response_data and 'translations' in response_data['data']:
             translated_text = response_data['data']['translations'][0]['translatedText']
