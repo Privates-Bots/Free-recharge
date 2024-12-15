@@ -1,56 +1,37 @@
-from flask import Flask, request, jsonify
-import requests
+import logging
+from telegram import Update
+from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, filters
+from flask import Flask, request
+
+# Hardcoded Bot Token (Not recommended for production)
+BOT_TOKEN = "7527990182:AAH6qYNs_UteKYi7KZ0jeMOT_d2I_ZEViEw"
+
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
 
 app = Flask(__name__)
 
-# Set your Google Cloud Translation API key
-API_KEY = 'AIzaSyA9KagdjpK-QmGQn26JOBz0YFsXYTE2ni8'
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text('Hi! Welcome to my simple bot.')
 
-@app.route('/translate', methods=['GET'])
-def translate():
-    # Get URL parameters
-    to_translate = request.args.get('toTrans')
-    text = request.args.get('text')
+async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(update.message.text)
 
-    if not to_translate or not text:
-        return jsonify({
-            'status': 'error',
-            'message': 'Missing required parameters: toTrans (language code) and text.'
-        }), 400
+# Initialize bot
+application = ApplicationBuilder().token(BOT_TOKEN).build()
 
-    # Prepare the API URL
-    url = f"https://translation.googleapis.com/language/translate/v2"
-    params = {
-        'key': API_KEY,
-        'q': text,
-        'target': to_translate
-    }
+start_handler = CommandHandler('start', start)
+echo_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), echo)
 
-    # Make the GET request
-    try:
-        response = requests.get(url, params=params)
-        response_data = response.json()
-        
-        print(response_data)  # Debugging line to log response
+application.add_handler(start_handler)
+application.add_handler(echo_handler)
 
-        if 'data' in response_data and 'translations' in response_data['data']:
-            translated_text = response_data['data']['translations'][0]['translatedText']
-            return jsonify({
-                'status': 'success',
-                'translated_text': translated_text,
-                'language_code': to_translate
-            }), 200
-        else:
-            return jsonify({
-                'status': 'error',
-                'message': 'Translation not found. Please check the language code and text.'
-            }), 500
-
-    except Exception as e:
-        return jsonify({
-            'status': 'error',
-            'message': f'An error occurred: {str(e)}'
-        }), 500
+# Set up your Flask route (this will be used by Vercel to handle requests)
+@app.route('/')
+def index():
+    return "Bot is running!"
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=5000)
