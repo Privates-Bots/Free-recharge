@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Image Animation</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome Link -->
   <style>
     body {
       margin: 0;
@@ -13,6 +14,7 @@
       align-items: center;
       height: 100vh;
       overflow: hidden;
+      position: relative; /* Needed for positioning the button */
     }
     img {
       position: absolute;
@@ -35,14 +37,22 @@
     audio {
       display: none;
     }
-    /* Play Button Style */
+    /* Small play button */
     .play-button {
       position: absolute;
-      background: rgba(255, 255, 255, 0.8);
+      top: 10px;
+      left: 10px;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
       border: none;
-      padding: 10px 20px;
-      font-size: 18px;
+      padding: 5px;
+      font-size: 20px;
       cursor: pointer;
+      border-radius: 50%;
+      transition: background-color 0.3s;
+    }
+    .play-button:hover {
+      background-color: rgba(0, 0, 0, 0.8);
     }
   </style>
 </head>
@@ -56,8 +66,10 @@
     Your browser does not support the audio element.
   </audio>
   
-  <!-- Play Button -->
-  <button class="play-button" id="playButton">Play Music</button>
+  <!-- Play Button with Font Awesome icon -->
+  <button class="play-button" id="playButton">
+    <i class="fas fa-play"></i> <!-- Play icon from Font Awesome -->
+  </button>
 
   <script>
     const image1 = document.getElementById('image1');
