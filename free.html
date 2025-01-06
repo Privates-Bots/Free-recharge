@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Animation</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      position: absolute;
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+    }
+    .visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <img id="image1" src="https://i.ibb.co/59tYbby/IMG-20250106-161845-enhanced.png" alt="Image 1">
+  <img id="image2" src="https://i.ibb.co/zZNswRc/IMG-20250106-164524-enhanced-jpg.png" alt="Image 2">
+
+  <script>
+    const image1 = document.getElementById('image1');
+    const image2 = document.getElementById('image2');
+
+    // Show the first image with fade-in animation
+    setTimeout(() => {
+      image1.classList.add('visible');
+      setTimeout(() => {
+        // Fade out the first image
+        image1.classList.remove('visible');
+        setTimeout(() => {
+          // Show the second image with fade-in animation
+          image2.classList.add('visible');
+        }, 2000); // Delay to match fade-out of image1
+      }, 3000); // Duration of showing the first image
+    }, 500); // Slight delay to ensure smooth initial animation
+  </script>
+</body>
+</html>
