@@ -35,15 +35,6 @@
     audio {
       display: none;
     }
-    /* Play Button Style */
-    .play-button {
-      position: absolute;
-      background: rgba(255, 255, 255, 0.8);
-      border: none;
-      padding: 10px 20px;
-      font-size: 18px;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
@@ -55,22 +46,19 @@
     <source src="https://free-recharge-alpha.vercel.app/ff-old-lobby-music.mp3" type="audio/mp3">
     Your browser does not support the audio element.
   </audio>
-  
-  <!-- Play Button -->
-  <button class="play-button" id="playButton">Play Music</button>
 
   <script>
     const image1 = document.getElementById('image1');
     const image2 = document.getElementById('image2');
     const audio = document.getElementById('backgroundAudio');
-    const playButton = document.getElementById('playButton');
 
-    // Event listener for the play button
-    playButton.addEventListener('click', () => {
-      // Play the audio when the button is clicked
-      audio.play();
-      playButton.style.display = 'none'; // Hide the play button after clicking
-    });
+    // Play the audio after a 2-second delay
+    setTimeout(() => {
+      // Try to play audio after a slight delay to circumvent autoplay issues
+      audio.play().catch(error => {
+        console.log('Audio play was blocked:', error);
+      });
+    }, 2000); // Start the audio after 2 seconds
 
     // Show the first image with fade-in animation
     setTimeout(() => {
