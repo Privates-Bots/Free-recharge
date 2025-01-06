@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Image Animation</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome Link -->
   <style>
@@ -14,24 +14,19 @@
       align-items: center;
       height: 100vh;
       overflow: hidden;
-      position: relative; /* Needed for positioning the button */
+      position: relative;
+      user-select: none; /* Prevent text selection */
     }
     img {
       position: absolute;
-      width: auto;
-      height: auto;
-      max-width: 100%;
-      max-height: 100%;
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Ensure the image covers the full viewport without being cut off */
       opacity: 0;
       transition: opacity 2s ease-in-out;
     }
     .visible {
       opacity: 1;
-    }
-    #image2 {
-      width: 100%;
-      height: 100%;
-      object-fit: contain; /* Show the entire image without cropping */
     }
     /* Hide the audio element */
     audio {
@@ -49,16 +44,16 @@
       font-size: 20px;
       cursor: pointer;
       border-radius: 50%;
-      opacity: 0.2; /* Very low visibility */
+      opacity: 0.2;
       transition: background-color 0.3s, opacity 0.3s;
     }
     .play-button:hover {
       background-color: rgba(0, 0, 0, 0.8);
-      opacity: 0.0000000000000000001; /* opacity slightly on hover */
+      opacity: 0.5; /* Increase opacity on hover */
     }
   </style>
 </head>
-<body>
+<body oncontextmenu="return false;"> <!-- Disable right-click menu -->
   <img id="image1" src="https://i.ibb.co/PD59wMr/IMG-20250106-171004.png" alt="Image 1">
   <img id="image2" src="https://i.ibb.co/hFnDxcT/IMG-20250106-170944.png" alt="Image 2">
   
