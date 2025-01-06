@@ -98,6 +98,12 @@
         }, 2000); // Delay to match fade-out of image1
       }, 3000); // Duration of showing the first image
     }, 500); // Slight delay to ensure smooth initial animation
+
+    // Stop the audio when the page is closed or unloaded
+    window.onbeforeunload = function() {
+      audio.pause();
+      audio.currentTime = 0; // Reset audio to the beginning
+    };
   </script>
 </body>
 </html>
