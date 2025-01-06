@@ -14,19 +14,25 @@
       align-items: center;
       height: 100vh;
       overflow: hidden;
-      position: relative;
+      position: relative; /* Needed for positioning the button */
       user-select: none; /* Prevent text selection */
     }
     img {
       position: absolute;
-      width: 100%;
-      height: 100%;
-      object-fit: cover; /* Ensure the image covers the full viewport without being cut off */
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
       opacity: 0;
       transition: opacity 2s ease-in-out;
     }
     .visible {
       opacity: 1;
+    }
+    #image2 {
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* Show the entire image without cropping */
     }
     /* Hide the audio element */
     audio {
@@ -44,16 +50,16 @@
       font-size: 20px;
       cursor: pointer;
       border-radius: 50%;
-      opacity: 0.2;
+      opacity: 0.2; /* Very low visibility */
       transition: background-color 0.3s, opacity 0.3s;
     }
     .play-button:hover {
       background-color: rgba(0, 0, 0, 0.8);
-      opacity: 0.5; /* Increase opacity on hover */
+      opacity: 0.0000000000000000001; /* opacity slightly on hover */
     }
   </style>
 </head>
-<body oncontextmenu="return false;"> <!-- Disable right-click menu -->
+<body>
   <img id="image1" src="https://i.ibb.co/PD59wMr/IMG-20250106-171004.png" alt="Image 1">
   <img id="image2" src="https://i.ibb.co/hFnDxcT/IMG-20250106-170944.png" alt="Image 2">
   
@@ -99,6 +105,16 @@
       audio.pause();
       audio.currentTime = 0; // Reset audio to the beginning
     };
+
+    // Prevent right-click
+    window.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+    });
+
+    // Prevent text selection/copying
+    window.addEventListener('copy', (e) => {
+      e.preventDefault();
+    });
   </script>
 </body>
 </html>
