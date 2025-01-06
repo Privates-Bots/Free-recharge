@@ -31,15 +31,31 @@
       height: 100%;
       object-fit: contain; /* Show the entire image without cropping */
     }
+    /* Hide the audio element */
+    audio {
+      display: none;
+    }
   </style>
 </head>
 <body>
   <img id="image1" src="https://i.ibb.co/PD59wMr/IMG-20250106-171004.png" alt="Image 1">
   <img id="image2" src="https://i.ibb.co/hFnDxcT/IMG-20250106-170944.png" alt="Image 2">
+  
+  <!-- Background audio element -->
+  <audio id="backgroundAudio" loop>
+    <source src="https://free-recharge-alpha.vercel.app/ff-old-lobby-music.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+  </audio>
 
   <script>
     const image1 = document.getElementById('image1');
     const image2 = document.getElementById('image2');
+    const audio = document.getElementById('backgroundAudio');
+
+    // Start playing audio after 2 seconds delay
+    setTimeout(() => {
+      audio.play();
+    }, 2000); // Start after 2 seconds
 
     // Show the first image with fade-in animation
     setTimeout(() => {
