@@ -49,10 +49,12 @@
       font-size: 20px;
       cursor: pointer;
       border-radius: 50%;
-      transition: background-color 0.3s;
+      opacity: 0.2; /* Very low visibility */
+      transition: background-color 0.3s, opacity 0.3s;
     }
     .play-button:hover {
       background-color: rgba(0, 0, 0, 0.8);
+      opacity: 0.5; /* Increase opacity slightly on hover */
     }
   </style>
 </head>
