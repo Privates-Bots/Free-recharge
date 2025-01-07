@@ -36,7 +36,7 @@
       bottom: 10%;
       left: 5%;
       right: 5%;
-      height: 15px;
+      height: 5px; /* Thinner loading bar */
       background-color: #333;
       border-radius: 0px;
       overflow: hidden;
@@ -47,22 +47,9 @@
     .loading-bar {
       width: 0%;
       height: 100%;
-      background-color: yellow;
+      background-color: #b88b00; /* Dark yellow color */
       transition: width 0.5s linear;
       position: relative;
-    }
-
-    .progress-text {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      color: black;
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-      font-weight: bold;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
     }
 
     /* Login Buttons Layout */
@@ -103,7 +90,7 @@
 
     .twitter-button,
     .more-button {
-      background-color: white;
+      background-color: #808080; /* Grey color */
       color: #fff;
     }
 
@@ -201,9 +188,7 @@
 
   <!-- Loading Bar -->
   <div class="loading-container" id="loadingContainer">
-    <div class="loading-bar" id="loadingBar">
-      <span class="progress-text" id="progressText">Loading 0%</span>
-    </div>
+    <div class="loading-bar" id="loadingBar"></div>
   </div>
 
   <!-- Login Container -->
@@ -238,7 +223,6 @@
     const image2 = document.getElementById('image2');
     const loadingContainer = document.getElementById('loadingContainer');
     const loadingBar = document.getElementById('loadingBar');
-    const progressText = document.getElementById('progressText');
     const loginContainer = document.getElementById('loginContainer');
     const moreButton = document.querySelector('.more-button');
     const overlay = document.getElementById('overlay');
@@ -255,8 +239,6 @@
         if (i < jerkyProgress.length) {
           progress = jerkyProgress[i];
           loadingBar.style.width = `${progress}%`;
-          progressText.textContent = `Loading ${progress}%`;
-          progressText.style.opacity = 1;
           i++;
         } else {
           clearInterval(interval);
