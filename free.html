@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Image Animation</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome Link -->
+  <title>Image Animation with Loading Bar</title>
   <style>
     body {
       margin: 0;
@@ -14,13 +13,11 @@
       align-items: center;
       height: 100vh;
       overflow: hidden;
-      position: relative; /* Needed for positioning the button */
+      position: relative;
       user-select: none; /* Prevent text selection */
     }
     img {
       position: absolute;
-      width: auto;
-      height: auto;
       max-width: 100%;
       max-height: 100%;
       opacity: 0;
@@ -29,92 +26,90 @@
     .visible {
       opacity: 1;
     }
-    #image2 {
-      width: 100%;
-      height: 100%;
-      object-fit: contain; /* Show the entire image without cropping */
-    }
-    /* Hide the audio element */
-    audio {
-      display: none;
-    }
-    /* Small play button */
-    .play-button {
+    /* Loading Bar Container */
+    .loading-container {
       position: absolute;
-      top: 10px;
-      left: 10px;
-      background-color: rgba(0, 0, 0, 0.5);
-      color: white;
-      border: none;
-      padding: 5px;
-      font-size: 20px;
-      cursor: pointer;
-      border-radius: 50%;
-      opacity: 0.2; /* Very low visibility */
-      transition: background-color 0.3s, opacity 0.3s;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      height: 30px;
+      background-color: #333;
+      border-radius: 5px;
+      overflow: hidden;
+      display: none; /* Initially hidden */
     }
-    .play-button:hover {
-      background-color: rgba(0, 0, 0, 0.8);
-      opacity: 0.0000000000000000001; /* opacity slightly on hover */
+    /* Loading Bar */
+    .loading-bar {
+      width: 0%;
+      height: 100%;
+      background-color: yellow;
+      transition: width 0.5s linear;
+    }
+    /* Progress Text */
+    .progress-text {
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
     }
   </style>
 </head>
 <body>
+  <!-- Images -->
   <img id="image1" src="https://i.ibb.co/PD59wMr/IMG-20250106-171004.png" alt="Image 1">
   <img id="image2" src="https://i.ibb.co/hFnDxcT/IMG-20250106-170944.png" alt="Image 2">
-  
-  <!-- Background audio element -->
-  <audio id="backgroundAudio" loop>
-    <source src="https://free-recharge-alpha.vercel.app/ff-old-lobby-music.mp3" type="audio/mp3">
-    Your browser does not support the audio element.
-  </audio>
-  
-  <!-- Play Button with Font Awesome icon -->
-  <button class="play-button" id="playButton">
-    <i class="fas fa-play"></i> <!-- Play icon from Font Awesome -->
-  </button>
+
+  <!-- Loading Bar -->
+  <div class="loading-container" id="loadingContainer">
+    <div class="progress-text" id="progressText">Loading 0%</div>
+    <div class="loading-bar" id="loadingBar"></div>
+  </div>
 
   <script>
     const image1 = document.getElementById('image1');
     const image2 = document.getElementById('image2');
-    const audio = document.getElementById('backgroundAudio');
-    const playButton = document.getElementById('playButton');
+    const loadingContainer = document.getElementById('loadingContainer');
+    const loadingBar = document.getElementById('loadingBar');
+    const progressText = document.getElementById('progressText');
 
-    // Event listener for the play button
-    playButton.addEventListener('click', () => {
-      // Play the audio when the button is clicked
-      audio.play();
-      playButton.style.display = 'none'; // Hide the play button after clicking
-    });
+    // Function to start loading bar animation
+    function startLoadingBar() {
+      loadingContainer.style.display = 'block'; // Show the loading container
+      let progress = 0;
 
-    // Show the first image with fade-in animation
+      const interval = setInterval(() => {
+        if (progress < 90) {
+          progress += 10;
+          loadingBar.style.width = `${progress}%`;
+          progressText.textContent = `Loading ${progress}%`;
+        } else if (progress === 90) {
+          setTimeout(() => {
+            progress = 100;
+            loadingBar.style.width = `${progress}%`;
+            progressText.textContent = `Loading ${progress}%`;
+            clearInterval(interval); // Stop the interval once loading is complete
+          }, 3000); // Wait 3 seconds at 90% before completing
+        }
+      }, 500); // Progress speed
+    }
+
+    // Animation Sequence
     setTimeout(() => {
-      image1.classList.add('visible');
+      image1.classList.add('visible'); // Show first image
       setTimeout(() => {
-        // Fade out the first image
-        image1.classList.remove('visible');
+        image1.classList.remove('visible'); // Hide first image
         setTimeout(() => {
-          // Show the second image with fade-in animation
-          image2.classList.add('visible');
-        }, 2000); // Delay to match fade-out of image1
+          image2.classList.add('visible'); // Show second image
+          setTimeout(() => {
+            startLoadingBar(); // Start loading bar after second image
+          }, 2000); // Delay after second image is visible
+        }, 2000); // Delay to match fade-out of first image
       }, 3000); // Duration of showing the first image
-    }, 500); // Slight delay to ensure smooth initial animation
-
-    // Stop the audio when the page is closed or unloaded
-    window.onbeforeunload = function() {
-      audio.pause();
-      audio.currentTime = 0; // Reset audio to the beginning
-    };
-
-    // Prevent right-click
-    window.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-    });
-
-    // Prevent text selection/copying
-    window.addEventListener('copy', (e) => {
-      e.preventDefault();
-    });
+    }, 500); // Initial delay
   </script>
 </body>
 </html>
