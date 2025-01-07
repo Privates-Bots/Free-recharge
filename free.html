@@ -72,7 +72,7 @@
       align-items: center;
       width: 200px;
       position: absolute;
-      bottom: 5%; /* Adjusted to make button further down */
+      bottom: 5%;
       left: 50%;
       transform: translateX(-50%);
       opacity: 0;
@@ -82,7 +82,7 @@
     .login-buttons-row {
       display: flex;
       width: 100%;
-      justify-content: flex-start;
+      justify-content: space-between; /* Ensure buttons are closer together */
     }
 
     .login-button {
@@ -91,7 +91,7 @@
       text-align: center;
       border: none;
       border-radius: 5px;
-      margin: 5px 0;
+      margin: 2px 0; /* Adjusted margin to bring buttons closer */
       cursor: pointer;
       font-weight: bold;
       display: flex;
@@ -117,7 +117,26 @@
     }
 
     .or {
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      color: #212121;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
+    .or::before,
+    .or::after {
+      content: '';
+      display: inline-block;
+      width: 40px;
+      height: 1px;
+      background-color: #212121;
+      vertical-align: middle;
+      margin: 0 8px;
+    }
 
     .guest-button, .more-button {
       flex-grow: 1;
