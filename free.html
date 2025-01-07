@@ -29,10 +29,10 @@
     /* Loading Bar Container */
     .loading-container {
       position: absolute;
-      bottom: 15%; /* Lower the bar */
+      bottom: 10%; /* Lower the bar further */
       left: 5%; /* Start slightly away from the left edge */
       right: 5%; /* End slightly away from the right edge */
-      height: 20px; /* Slightly thicker bar */
+      height: 15px; /* Thinner bar */
       background-color: #333;
       border-radius: 0px; /* Square edges for the loading bar */
       overflow: hidden;
@@ -57,6 +57,8 @@
       font-family: Arial, sans-serif;
       font-size: 14px;
       font-weight: bold;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
     }
   </style>
 </head>
@@ -68,7 +70,7 @@
   <!-- Loading Bar -->
   <div class="loading-container" id="loadingContainer">
     <div class="loading-bar" id="loadingBar">
-      <span class="progress-text" id="progressText">0%</span>
+      <span class="progress-text" id="progressText">Loading 0%</span>
     </div>
   </div>
 
@@ -88,12 +90,13 @@
         if (progress < 90) {
           progress += 10;
           loadingBar.style.width = `${progress}%`;
-          progressText.textContent = `${progress}%`;
+          progressText.textContent = `Loading ${progress}%`;
+          progressText.style.opacity = 1; // Show text with animation
         } else if (progress === 90) {
           setTimeout(() => {
             progress = 100;
             loadingBar.style.width = `${progress}%`;
-            progressText.textContent = `${progress}%`;
+            progressText.textContent = `Loading ${progress}%`;
             clearInterval(interval); // Stop the interval once loading is complete
           }, 3000); // Wait 3 seconds at 90% before completing
         }
