@@ -82,29 +82,29 @@
     .login-buttons-row {
       display: flex;
       width: 100%;
-      justify-content: space-between; /* Ensure buttons are closer together */
+      justify-content: space-between;
     }
 
     .login-button {
       width: 100%;
-      padding: 6px 10px; /* Smaller padding for thinner button */
+      padding: 6px 10px;
       text-align: center;
       border: none;
       border-radius: 5px;
-      margin: 2px 0; /* Adjusted margin to bring buttons closer */
+      margin: 2px 0;
       cursor: pointer;
       font-weight: bold;
       display: flex;
       align-items: center;
       justify-content: center;
       box-sizing: border-box;
-      font-size: 12px; /* Smaller font size */
+      font-size: 12px;
     }
 
-    .guest-button,
+    .twitter-button,
     .more-button {
-      background-color: #fff;
-      color: #212121;
+      background-color: #1da1f2;
+      color: #fff;
     }
 
     .facebook-button {
@@ -138,21 +138,60 @@
       margin: 0 8px;
     }
 
-    .guest-button, .more-button {
-      flex-grow: 1;
-      margin-right: 5px;
-    }
-
     .more-button {
       margin-left: 5px;
     }
 
-    /* Hide the button initially */
-    .blue-button {
+    /* Popup for More Options */
+    .popup {
+      display: none;
       position: absolute;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
-      bottom: 10%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .popup-button {
+      width: 100%;
+      padding: 8px;
+      text-align: center;
+      border: none;
+      border-radius: 5px;
+      margin: 5px 0;
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .google-button {
+      background-color: #4285f4;
+      color: white;
+    }
+
+    .vk-button {
+      background-color: #4c75a3;
+      color: white;
+    }
+
+    /* Background overlay to close popup */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
     }
   </style>
 </head>
@@ -174,13 +213,24 @@
     </button>
     <p class="or">or</p>
     <div class="login-buttons-row">
-      <button class="login-button guest-button">
-        <i class="fa-solid fa-user icon"></i> Guest
+      <button class="login-button twitter-button">
+        <i class="fab fa-twitter icon"></i> Twitter
       </button>
       <button class="login-button more-button">
         <i class="fas fa-ellipsis-h icon"></i> More
       </button>
     </div>
+  </div>
+
+  <!-- Popup -->
+  <div class="overlay" id="overlay"></div>
+  <div class="popup" id="popup">
+    <button class="popup-button google-button">
+      <i class="fab fa-google icon"></i> Login with Google
+    </button>
+    <button class="popup-button vk-button">
+      <i class="fab fa-vk icon"></i> Login with VK
+    </button>
   </div>
 
   <script>
@@ -190,7 +240,9 @@
     const loadingBar = document.getElementById('loadingBar');
     const progressText = document.getElementById('progressText');
     const loginContainer = document.getElementById('loginContainer');
-    const loginButton = document.querySelector('.facebook-button');
+    const moreButton = document.querySelector('.more-button');
+    const overlay = document.getElementById('overlay');
+    const popup = document.getElementById('popup');
 
     // Function to start loading bar animation
     function startJerkyLoadingBar() {
@@ -210,12 +262,24 @@
           clearInterval(interval);
           setTimeout(() => {
             image2.classList.add('visible');
-            loginContainer.style.opacity = 1; // Show login buttons after loading
+            loginContainer.style.opacity = 1;
             loadingContainer.style.display = 'none';
           }, 500);
         }
       }, 50);
     }
+
+    // Open the popup when "More" button is clicked
+    moreButton.addEventListener('click', () => {
+      popup.style.display = 'block';
+      overlay.style.display = 'block';
+    });
+
+    // Close the popup when clicking outside of it
+    overlay.addEventListener('click', () => {
+      popup.style.display = 'none';
+      overlay.style.display = 'none';
+    });
 
     // Animation Sequence
     setTimeout(() => {
