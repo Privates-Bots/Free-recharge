@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Image Animation with Loading and Button</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome Link -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     body {
       margin: 0;
@@ -17,6 +17,7 @@
       position: relative;
       user-select: none;
     }
+
     img {
       position: absolute;
       max-width: 100%;
@@ -24,23 +25,25 @@
       opacity: 0;
       transition: opacity 2s ease-in-out;
     }
+    
     .visible {
       opacity: 1;
     }
+
     /* Loading Bar Container */
     .loading-container {
       position: absolute;
-      bottom: 10%; /* Lower the bar further */
-      left: 5%; /* Start slightly away from the left edge */
-      right: 5%; /* End slightly away from the right edge */
-      height: 15px; /* Thinner bar */
+      bottom: 10%; 
+      left: 5%;
+      right: 5%;
+      height: 15px;
       background-color: #333;
-      border-radius: 0px; /* Square edges for the loading bar */
+      border-radius: 0px; 
       overflow: hidden;
-      display: none; /* Initially hidden */
+      display: none;
       box-shadow: 0 0 10px rgba(255, 255, 0, 0.7);
     }
-    /* Loading Bar */
+
     .loading-bar {
       width: 0%;
       height: 100%;
@@ -48,49 +51,109 @@
       transition: width 0.5s linear;
       position: relative;
     }
-    /* Progress Text Inside Bar */
+
     .progress-text {
       position: absolute;
       top: 0;
       left: 50%;
       transform: translateX(-50%);
-      color: black; /* Black color for progress text */
+      color: black;
       font-family: Arial, sans-serif;
       font-size: 14px;
       font-weight: bold;
       opacity: 0;
       transition: opacity 1s ease-in-out;
     }
-    /* Blue Button Styling */
-    .blue-button {
+
+    /* Login Buttons Layout */
+    .login-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 300px;
       position: absolute;
       bottom: 20%;
       left: 50%;
       transform: translateX(-50%);
-      background-color: #007BFF;
-      color: white;
+    }
+
+    .login-buttons-row {
+      display: flex;
+      width: 100%;
+      justify-content: flex-start;
+    }
+
+    .login-button {
+      width: 100%;
+      padding: 10px;
+      text-align: center;
       border: none;
-      padding: 10px 20px; /* Reduced padding for thinner button */
-      font-size: 14px; /* Smaller font size */
-      font-weight: bold;
-      cursor: pointer;
       border-radius: 5px;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
+      margin: 5px 0;
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+
+    .guest-button,
+    .more-button {
+      background-color: #fff;
+      color: #212121;
+    }
+
+    .facebook-button {
+      background-color: #1877f2;
+      color: #fff;
+    }
+
+    .icon {
+      margin-right: 8px;
+    }
+
+    .or {
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      color: #212121;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .blue-button i {
-      margin-right: 10px;
+
+    .or::before,
+    .or::after {
+      content: '';
+      display: inline-block;
+      width: 40px;
+      height: 1px;
+      background-color: #212121;
+      vertical-align: middle;
+      margin: 0 8px;
     }
-    .blue-button:hover {
-      background-color: #0056b3;
+
+    .guest-button, .more-button {
+      flex-grow: 1;
+      margin-right: 5px;
+    }
+
+    .more-button {
+      margin-left: 5px;
+    }
+
+    /* Hide login button initially */
+    .blue-button {
+      position: absolute;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      bottom: 10%;
     }
   </style>
 </head>
 <body>
-  <!-- Images -->
   <img id="image1" src="https://i.ibb.co/PD59wMr/IMG-20250106-171004.png" alt="Image 1">
   <img id="image2" src="https://i.ibb.co/hFnDxcT/IMG-20250106-170944.png" alt="Image 2">
 
@@ -101,10 +164,21 @@
     </div>
   </div>
 
-  <!-- Blue Login Button -->
-  <button class="blue-button" id="loginButton">
-    <i class="fab fa-facebook"></i> Login with Facebook
-  </button>
+  <!-- Login Container -->
+  <div class="login-container" id="loginContainer">
+    <button class="login-button facebook-button">
+      <i class="fab fa-facebook-f icon"></i> Sign in with Facebook
+    </button>
+    <p class="or">or</p>
+    <div class="login-buttons-row">
+      <button class="login-button guest-button">
+        <i class="fa-solid fa-user icon"></i> Guest
+      </button>
+      <button class="login-button more-button">
+        <i class="fas fa-ellipsis-h icon"></i> More
+      </button>
+    </div>
+  </div>
 
   <script>
     const image1 = document.getElementById('image1');
@@ -112,14 +186,14 @@
     const loadingContainer = document.getElementById('loadingContainer');
     const loadingBar = document.getElementById('loadingBar');
     const progressText = document.getElementById('progressText');
-    const loginButton = document.getElementById('loginButton');
+    const loginContainer = document.getElementById('loginContainer');
+    const loginButton = document.querySelector('.facebook-button');
 
-    // Function to start jerky loading bar animation
+    // Function to start loading bar animation
     function startJerkyLoadingBar() {
-      loadingContainer.style.display = 'block'; // Show the loading container
+      loadingContainer.style.display = 'block';
       let progress = 0;
-
-      const jerkyProgress = Array.from({length: 100}, (_, i) => i + 1); // Progress from 1 to 100
+      const jerkyProgress = Array.from({length: 100}, (_, i) => i + 1);
       let i = 0;
 
       const interval = setInterval(() => {
@@ -127,32 +201,32 @@
           progress = jerkyProgress[i];
           loadingBar.style.width = `${progress}%`;
           progressText.textContent = `Loading ${progress}%`;
-          progressText.style.opacity = 1; // Show text with animation
+          progressText.style.opacity = 1;
           i++;
         } else {
-          clearInterval(interval); // Stop the interval once loading is complete
+          clearInterval(interval);
           setTimeout(() => {
-            image2.classList.add('visible'); // Show the second image after loading
-            loginButton.style.opacity = 1; // Show login button after loading
-            loadingContainer.style.display = 'none'; // Hide loading container once done
-          }, 500); // Delay to show image before button
+            image2.classList.add('visible');
+            loginContainer.style.opacity = 1; // Show login buttons
+            loadingContainer.style.display = 'none';
+          }, 500);
         }
-      }, 50); // Speed of the progress bar update (every 50ms)
+      }, 50);
     }
 
     // Animation Sequence
     setTimeout(() => {
-      image1.classList.add('visible'); // Show first image
+      image1.classList.add('visible');
       setTimeout(() => {
-        image1.classList.remove('visible'); // Hide first image
+        image1.classList.remove('visible');
         setTimeout(() => {
-          image2.classList.add('visible'); // Show second image
+          image2.classList.add('visible');
           setTimeout(() => {
-            startJerkyLoadingBar(); // Start jerky loading bar after second image
-          }, 2000); // Delay after second image is visible
-        }, 2000); // Delay to match fade-out of first image
-      }, 3000); // Duration of showing the first image
-    }, 500); // Initial delay
+            startJerkyLoadingBar();
+          }, 2000);
+        }, 2000);
+      }, 3000);
+    }, 500);
   </script>
 </body>
 </html>
