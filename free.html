@@ -32,15 +32,12 @@
       bottom: 15%; /* Lower the bar */
       left: 5%; /* Start slightly away from the left edge */
       right: 5%; /* End slightly away from the right edge */
-      height: 12px; /* Slightly thinner bar */
+      height: 20px; /* Slightly thicker bar */
       background-color: #333;
+      border-radius: 0px; /* Square edges for the loading bar */
       overflow: hidden;
       display: none; /* Initially hidden */
-      box-shadow: 0 0 5px rgba(255, 255, 0, 0.7);
-    }
-    /* Remove rounded corners */
-    .loading-container, .loading-bar {
-      border-radius: 0; /* Square edges */
+      box-shadow: 0 0 10px rgba(255, 255, 0, 0.7);
     }
     /* Loading Bar */
     .loading-bar {
@@ -48,14 +45,15 @@
       height: 100%;
       background-color: yellow;
       transition: width 0.5s linear;
+      position: relative;
     }
-    /* Progress Text */
+    /* Progress Text Inside Bar */
     .progress-text {
       position: absolute;
-      bottom: 15%; /* Match the bar's position */
+      top: 0;
       left: 50%;
       transform: translateX(-50%);
-      color: black; /* Black font */
+      color: black; /* Black color for progress text */
       font-family: Arial, sans-serif;
       font-size: 14px;
       font-weight: bold;
@@ -68,9 +66,10 @@
   <img id="image2" src="https://i.ibb.co/hFnDxcT/IMG-20250106-170944.png" alt="Image 2">
 
   <!-- Loading Bar -->
-  <div class="progress-text" id="progressText">Loading 0%</div>
   <div class="loading-container" id="loadingContainer">
-    <div class="loading-bar" id="loadingBar"></div>
+    <div class="loading-bar" id="loadingBar">
+      <span class="progress-text" id="progressText">0%</span>
+    </div>
   </div>
 
   <script>
@@ -83,19 +82,18 @@
     // Function to start loading bar animation
     function startLoadingBar() {
       loadingContainer.style.display = 'block'; // Show the loading container
-      progressText.style.display = 'block'; // Show the progress text
       let progress = 0;
 
       const interval = setInterval(() => {
         if (progress < 90) {
           progress += 10;
           loadingBar.style.width = `${progress}%`;
-          progressText.textContent = `Loading ${progress}%`;
+          progressText.textContent = `${progress}%`;
         } else if (progress === 90) {
           setTimeout(() => {
             progress = 100;
             loadingBar.style.width = `${progress}%`;
-            progressText.textContent = `Loading ${progress}%`;
+            progressText.textContent = `${progress}%`;
             clearInterval(interval); // Stop the interval once loading is complete
           }, 3000); // Wait 3 seconds at 90% before completing
         }
