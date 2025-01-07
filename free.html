@@ -29,13 +29,12 @@
     /* Loading Bar Container */
     .loading-container {
       position: absolute;
-      bottom: 20%; /* Slightly below center */
-      left: 50%;
-      transform: translateX(-50%);
-      width: 300px;
-      height: 20px; /* Thinner bar */
+      bottom: 15%; /* Lower the bar */
+      left: 5%; /* Start slightly away from the left edge */
+      right: 5%; /* End slightly away from the right edge */
+      height: 15px; /* Thinner bar */
       background-color: #333;
-      border-radius: 5px;
+      border-radius: 8px; /* Slightly rounded corners */
       overflow: hidden;
       display: none; /* Initially hidden */
       box-shadow: 0 0 10px rgba(255, 255, 0, 0.7);
@@ -50,14 +49,13 @@
     /* Progress Text Inside Bar */
     .progress-text {
       position: absolute;
-      top: 0;
+      top: -25px; /* Adjusted above the bar */
       left: 50%;
       transform: translateX(-50%);
-      color: black; /* Visible against the yellow bar */
+      color: white; /* Visible against the dark background */
       font-family: Arial, sans-serif;
       font-size: 14px;
       font-weight: bold;
-      line-height: 20px; /* Center text vertically in the thinner bar */
     }
   </style>
 </head>
