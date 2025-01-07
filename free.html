@@ -3,31 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Landscape Mode Website</title>
+  <title>Image Animation with Loading and Button</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
-    /* Ensure full-screen landscape mode */
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
+      background-color: black;
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: black;
-    }
-
-    /* Force the website into landscape mode */
-    body {
-      transform: rotate(-90deg);
-      transform-origin: center center;
-      width: 100vh; /* Swap width and height */
-      height: 100vw;
-      position: absolute;
-      left: 0;
-      top: 0;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      user-select: none;
     }
 
     img {
@@ -48,7 +36,7 @@
       bottom: 10%;
       left: 5%;
       right: 5%;
-      height: 5px;
+      height: 5px; /* Thinner loading bar */
       background-color: #333;
       border-radius: 0px;
       overflow: hidden;
@@ -59,7 +47,7 @@
     .loading-bar {
       width: 0%;
       height: 100%;
-      background-color: #b88b00;
+      background-color: #b88b00; /* Dark yellow color */
       transition: width 0.5s linear;
       position: relative;
     }
@@ -102,7 +90,7 @@
 
     .twitter-button,
     .more-button {
-      background-color: #808080;
+      background-color: #808080; /* Grey color */
       color: #fff;
     }
 
@@ -240,6 +228,7 @@
     const overlay = document.getElementById('overlay');
     const popup = document.getElementById('popup');
 
+    // Function to start loading bar animation
     function startJerkyLoadingBar() {
       loadingContainer.style.display = 'block';
       let progress = 0;
@@ -262,16 +251,19 @@
       }, 50);
     }
 
+    // Open the popup when "More" button is clicked
     moreButton.addEventListener('click', () => {
       popup.style.display = 'block';
       overlay.style.display = 'block';
     });
 
+    // Close the popup when clicking outside of it
     overlay.addEventListener('click', () => {
       popup.style.display = 'none';
       overlay.style.display = 'none';
     });
 
+    // Animation Sequence
     setTimeout(() => {
       image1.classList.add('visible');
       setTimeout(() => {
