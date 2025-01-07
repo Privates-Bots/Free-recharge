@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Image Animation with Loading Bar</title>
+  <title>Image Animation with Jerky Loading Bar</title>
   <style>
     body {
       margin: 0;
@@ -81,21 +81,25 @@
     const loadingBar = document.getElementById('loadingBar');
     const progressText = document.getElementById('progressText');
 
-    // Function to start loading bar animation
-    function startLoadingBar() {
+    // Function to start jerky loading bar animation
+    function startJerkyLoadingBar() {
       loadingContainer.style.display = 'block'; // Show the loading container
       let progress = 0;
 
+      const jerkyProgress = [5, 10, 15, 20, 30, 35, 45, 50, 60, 70, 75, 80, 85, 90, 100]; // Jerky progress steps
+      let i = 0;
+
       const interval = setInterval(() => {
-        if (progress < 100) {
-          progress += 1; // Increase by 1% each time
+        if (i < jerkyProgress.length) {
+          progress = jerkyProgress[i];
           loadingBar.style.width = `${progress}%`;
           progressText.textContent = `Loading ${progress}%`;
           progressText.style.opacity = 1; // Show text with animation
+          i++;
         } else {
           clearInterval(interval); // Stop the interval once loading is complete
         }
-      }, 50); // Progress speed, updated every 50ms for smooth transition
+      }, 300); // Jerky speed, updated every 300ms
     }
 
     // Animation Sequence
@@ -106,7 +110,7 @@
         setTimeout(() => {
           image2.classList.add('visible'); // Show second image
           setTimeout(() => {
-            startLoadingBar(); // Start loading bar after second image
+            startJerkyLoadingBar(); // Start jerky loading bar after second image
           }, 2000); // Delay after second image is visible
         }, 2000); // Delay to match fade-out of first image
       }, 3000); // Duration of showing the first image
