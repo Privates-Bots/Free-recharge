@@ -70,8 +70,8 @@
       background-color: #007BFF;
       color: white;
       border: none;
-      padding: 15px 30px;
-      font-size: 16px;
+      padding: 10px 20px; /* Reduced padding for thinner button */
+      font-size: 14px; /* Smaller font size */
       font-weight: bold;
       cursor: pointer;
       border-radius: 5px;
@@ -119,7 +119,7 @@
       loadingContainer.style.display = 'block'; // Show the loading container
       let progress = 0;
 
-      const jerkyProgress = [5, 10, 15, 20, 30, 35, 45, 50, 60, 70, 75, 80, 85, 90, 100]; // Jerky progress steps
+      const jerkyProgress = Array.from({length: 100}, (_, i) => i + 1); // Progress from 1 to 100
       let i = 0;
 
       const interval = setInterval(() => {
@@ -134,9 +134,10 @@
           setTimeout(() => {
             image2.classList.add('visible'); // Show the second image after loading
             loginButton.style.opacity = 1; // Show login button after loading
+            loadingContainer.style.display = 'none'; // Hide loading container once done
           }, 500); // Delay to show image before button
         }
-      }, 300); // Jerky speed, updated every 300ms
+      }, 50); // Speed of the progress bar update (every 50ms)
     }
 
     // Animation Sequence
