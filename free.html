@@ -29,15 +29,16 @@
     /* Loading Bar Container */
     .loading-container {
       position: absolute;
-      top: 50%;
+      bottom: 20%; /* Slightly below center */
       left: 50%;
-      transform: translate(-50%, -50%);
-      width: 200px;
-      height: 30px;
+      transform: translateX(-50%);
+      width: 300px;
+      height: 20px; /* Thinner bar */
       background-color: #333;
       border-radius: 5px;
       overflow: hidden;
       display: none; /* Initially hidden */
+      box-shadow: 0 0 10px rgba(255, 255, 0, 0.7);
     }
     /* Loading Bar */
     .loading-bar {
@@ -46,15 +47,17 @@
       background-color: yellow;
       transition: width 0.5s linear;
     }
-    /* Progress Text */
+    /* Progress Text Inside Bar */
     .progress-text {
       position: absolute;
-      top: -25px;
+      top: 0;
       left: 50%;
       transform: translateX(-50%);
-      color: white;
+      color: black; /* Visible against the yellow bar */
       font-family: Arial, sans-serif;
-      font-size: 16px;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 20px; /* Center text vertically in the thinner bar */
     }
   </style>
 </head>
@@ -65,8 +68,9 @@
 
   <!-- Loading Bar -->
   <div class="loading-container" id="loadingContainer">
-    <div class="progress-text" id="progressText">Loading 0%</div>
-    <div class="loading-bar" id="loadingBar"></div>
+    <div class="loading-bar" id="loadingBar">
+      <span class="progress-text" id="progressText">0%</span>
+    </div>
   </div>
 
   <script>
@@ -85,12 +89,12 @@
         if (progress < 90) {
           progress += 10;
           loadingBar.style.width = `${progress}%`;
-          progressText.textContent = `Loading ${progress}%`;
+          progressText.textContent = `${progress}%`;
         } else if (progress === 90) {
           setTimeout(() => {
             progress = 100;
             loadingBar.style.width = `${progress}%`;
-            progressText.textContent = `Loading ${progress}%`;
+            progressText.textContent = `${progress}%`;
             clearInterval(interval); // Stop the interval once loading is complete
           }, 3000); // Wait 3 seconds at 90% before completing
         }
