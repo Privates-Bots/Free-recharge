@@ -180,6 +180,38 @@
       background-color: rgba(0, 0, 0, 0.5);
       z-index: 999;
     }
+
+    /* Landscape Mode */
+    @media only screen and (orientation: portrait) {
+      body {
+        transform: rotate(90deg);
+        transform-origin: center center;
+        width: 100vh;
+        height: 100vw;
+      }
+
+      .loading-container {
+        bottom: 5%;
+        left: 5%;
+        right: 5%;
+      }
+
+      .login-container {
+        bottom: 5%;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .popup {
+        width: 80%;
+      }
+
+      img {
+        width: 100vw;
+        height: 100vh;
+      }
+    }
+
   </style>
 </head>
 <body>
