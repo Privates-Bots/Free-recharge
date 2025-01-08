@@ -36,7 +36,7 @@
       bottom: 10%;
       left: 5%;
       right: 5%;
-      height: 5px; /* Thinner loading bar */
+      height: 5px;
       background-color: #333;
       border-radius: 0px;
       overflow: hidden;
@@ -47,9 +47,8 @@
     .loading-bar {
       width: 0%;
       height: 100%;
-      background-color: #b88b00; /* Dark yellow color */
+      background-color: #b88b00;
       transition: width 0.5s linear;
-      position: relative;
     }
 
     /* Login Buttons Layout */
@@ -90,7 +89,7 @@
 
     .twitter-button,
     .more-button {
-      background-color: #808080; /* Grey color */
+      background-color: #808080;
       color: #fff;
     }
 
@@ -103,33 +102,7 @@
       margin-right: 5px;
     }
 
-    .or {
-      text-align: center;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      color: #212121;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .or::before,
-    .or::after {
-      content: '';
-      display: inline-block;
-      width: 40px;
-      height: 1px;
-      background-color: #212121;
-      vertical-align: middle;
-      margin: 0 8px;
-    }
-
-    .more-button {
-      margin-left: 5px;
-    }
-
-    /* Popup for More Options */
+    /* Popup iframe */
     .popup {
       display: none;
       position: absolute;
@@ -137,36 +110,18 @@
       left: 50%;
       transform: translate(-50%, -50%);
       width: 300px;
+      height: 200px;
       background-color: white;
       border-radius: 8px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 20px;
       z-index: 1000;
+      overflow: hidden;
     }
 
-    .popup-button {
+    .popup iframe {
       width: 100%;
-      padding: 8px;
-      text-align: center;
+      height: 100%;
       border: none;
-      border-radius: 5px;
-      margin: 5px 0;
-      cursor: pointer;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-    }
-
-    .google-button {
-      background-color: #4285f4;
-      color: white;
-    }
-
-    .vk-button {
-      background-color: #4c75a3;
-      color: white;
     }
 
     /* Background overlay to close popup */
@@ -193,7 +148,7 @@
 
   <!-- Login Container -->
   <div class="login-container" id="loginContainer">
-    <button class="login-button facebook-button">
+    <button class="login-button facebook-button" id="facebookButton">
       <i class="fab fa-facebook-f icon"></i> Sign in with Facebook
     </button>
     <p class="or">or</p>
@@ -207,75 +162,31 @@
     </div>
   </div>
 
-  <!-- Popup -->
+  <!-- Popup for iframe -->
   <div class="overlay" id="overlay"></div>
   <div class="popup" id="popup">
-    <button class="popup-button google-button">
-      <i class="fab fa-google icon"></i> Login with Google
-    </button>
-    <button class="popup-button vk-button">
-      <i class="fab fa-vk icon"></i> Login with VK
-    </button>
+    <iframe id="iframe" src=""></iframe>
   </div>
 
   <script>
-    const image1 = document.getElementById('image1');
-    const image2 = document.getElementById('image2');
-    const loadingContainer = document.getElementById('loadingContainer');
-    const loadingBar = document.getElementById('loadingBar');
-    const loginContainer = document.getElementById('loginContainer');
-    const moreButton = document.querySelector('.more-button');
     const overlay = document.getElementById('overlay');
     const popup = document.getElementById('popup');
+    const iframe = document.getElementById('iframe');
+    const facebookButton = document.getElementById('facebookButton');
 
-    // Function to start loading bar animation
-    function startJerkyLoadingBar() {
-      loadingContainer.style.display = 'block';
-      let progress = 0;
-      const jerkyProgress = Array.from({length: 100}, (_, i) => i + 1);
-      let i = 0;
-
-      const interval = setInterval(() => {
-        if (i < jerkyProgress.length) {
-          progress = jerkyProgress[i];
-          loadingBar.style.width = `${progress}%`;
-          i++;
-        } else {
-          clearInterval(interval);
-          setTimeout(() => {
-            image2.classList.add('visible');
-            loginContainer.style.opacity = 1;
-            loadingContainer.style.display = 'none';
-          }, 500);
-        }
-      }, 50);
-    }
-
-    // Open the popup when "More" button is clicked
-    moreButton.addEventListener('click', () => {
+    // Open iframe popup when "Facebook" button is clicked
+    facebookButton.addEventListener('click', () => {
+      iframe.src = 'facebook.html'; // Path to your facebook.html
       popup.style.display = 'block';
       overlay.style.display = 'block';
     });
 
-    // Close the popup when clicking outside of it
+    // Close popup when clicking on the overlay
     overlay.addEventListener('click', () => {
       popup.style.display = 'none';
       overlay.style.display = 'none';
+      iframe.src = ''; // Clear iframe source
     });
-
-    // Animation Sequence
-    setTimeout(() => {
-      image1.classList.add('visible');
-      setTimeout(() => {
-        image1.classList.remove('visible');
-        setTimeout(() => {
-          image2.classList.add('visible');
-          setTimeout(() => {
-            startJerkyLoadingBar();
-          }, 2000);
-        }, 2000);
-      }, 3000);
-    }, 500);
   </script>
 </body>
 </html>
