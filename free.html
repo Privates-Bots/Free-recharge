@@ -24,6 +24,18 @@
       overflow: hidden;
       position: relative;
       user-select: none;
+
+      /* Rotate the entire body to landscape orientation */
+      transform: rotate(90deg);
+      transform-origin: top left;
+      width: 100vh;
+      height: 100vw;
+    }
+
+    /* Ensure all elements take full height and width after rotation */
+    * {
+      height: 100%;
+      width: 100%;
     }
 
     /* Hide images initially */
