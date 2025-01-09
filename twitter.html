@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twitter Sign-In Clone</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* General Page Styling */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #fff;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* Container */
+    .container {
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    /* Twitter Logo */
+    .twitter-logo {
+      font-size: 50px;
+      color: #1DA1F2;
+      margin-bottom: 20px;
+    }
+
+    /* Titles */
+    .title {
+      font-size: 24px;
+      font-weight: 500;
+      color: #1DA1F2;
+      margin: 16px 0;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #657786;
+      margin-bottom: 24px;
+    }
+
+    /* Input Fields */
+    .input-field {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .input-field label {
+      font-size: 12px;
+      color: #657786;
+      margin-bottom: 4px;
+    }
+
+    .input-field input {
+      width: 100%;
+      padding: 8px 0;
+      border: none;
+      border-bottom: 2px solid #ccd6dd;
+      font-size: 16px;
+      color: #14171A;
+      outline: none;
+    }
+
+    .input-field input:focus {
+      border-bottom-color: #1DA1F2;
+    }
+
+    /* Sign-In Button */
+    .sign-in-btn {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #fff;
+      background-color: #1DA1F2;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .sign-in-btn:hover {
+      background-color: #0d95e8;
+    }
+
+    /* Error Message */
+    .error-message {
+      color: #e0245e;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Twitter Logo -->
+    <i class="fab fa-twitter twitter-logo"></i>
+    
+    <!-- Titles -->
+    <div class="title">Sign In to Twitter</div>
+    <div class="subtitle">Enter your username and password to continue</div>
+    
+    <!-- Username Input -->
+    <div class="input-field">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required>
+      <div id="username-error" class="error-message"></div>
+    </div>
+    
+    <!-- Password Input -->
+    <div class="input-field">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+      <div id="password-error" class="error-message"></div>
+    </div>
+    
+    <!-- Sign-In Button -->
+    <button class="sign-in-btn" onclick="handleSignIn()">Sign In</button>
+  </div>
+
+  <script>
+    function handleSignIn() {
+      // Clear previous error messages
+      document.getElementById('username-error').innerHTML = '';
+      document.getElementById('password-error').innerHTML = '';
+
+      // Get the values of the inputs
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      // Validation logic
+      let valid = true;
+
+      // Validate username
+      if (username.trim() === '') {
+        document.getElementById('username-error').innerHTML = 'Please enter your username';
+        valid = false;
+      }
+
+      // Validate password
+      if (password.trim() === '') {
+        document.getElementById('password-error').innerHTML = 'Please enter your password';
+        valid = false;
+      }
+
+      // If everything is valid, you can proceed with form submission or login
+      if (valid) {
+        alert('Successfully signed in!');
+        // You can replace this with form submission logic or API call
+      }
+    }
+  </script>
+</body>
+</html>
