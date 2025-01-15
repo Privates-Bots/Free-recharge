@@ -126,21 +126,48 @@
     }
 
     /* Popup and iframe */
-    .popup,
-    .iframe-popup {
-      display: none;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 300px;
-      height: 300px;
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      z-index: 1000;
-    }
+    /* Popup and iframe */
+.popup,
+.iframe-popup {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px; /* Popup width */
+  height: 300px; /* Popup height */
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 10px; /* Add padding to prevent buttons from touching edges */
+}
 
+/* Buttons inside the popup */
+.popup-button {
+  width: 100%; /* Fill the container */
+  padding: 12px; /* Make buttons taller */
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  margin: 5px 0; /* Space between buttons */
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box; /* Include padding and border in width calculation */
+}
+
+.google-button {
+  background-color: #db4437; /* Google Red */
+  color: white;
+}
+
+.vk-button {
+  background-color: #4c75a3; /* VK Blue */
+  color: white;
+}
     .iframe-popup iframe {
       width: 100%;
       height: 100%;
