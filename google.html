@@ -137,15 +137,19 @@
     }
 
     .notification {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #4285f4;
-      color: #fff;
-      padding: 10px;
-      border-radius: 5px;
-      display: none;
-    }
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #4285f4;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  z-index: 1000;
+  display: none;
+}
   </style>
 </head>
 <body>
