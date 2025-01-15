@@ -214,22 +214,27 @@
     const iframeContent = document.getElementById('iframeContent');
 
     // Function to start loading bar animation
-    function startJerkyLoadingBar() {
-      loadingContainer.style.display = 'block';
-      let progress = 0;
-      const interval = setInterval(() => {
-        if (progress < 100) {
-          progress += 10;
-          loadingBar.style.width = `${progress}%`;
-        } else {
-          clearInterval(interval);
-          setTimeout(() => {
-            loginContainer.style.opacity = 1;
-            loadingContainer.style.display = 'none';
-          }, 500);
-        }
-      }, 50);
+    // Function to start loading bar animation
+function startJerkyLoadingBar() {
+  loadingContainer.style.display = 'block';
+  let progress = 0;
+  const duration = 5000; // 5 seconds
+  const intervalDuration = 100; // Update interval every 100ms
+  const increment = 100 * (intervalDuration / duration); // Increment value to ensure 5 seconds duration
+
+  const interval = setInterval(() => {
+    if (progress < 100) {
+      progress += increment;
+      loadingBar.style.width = `${Math.min(progress, 100)}%`; // Ensure it doesn't exceed 100%
+    } else {
+      clearInterval(interval);
+      setTimeout(() => {
+        loginContainer.style.opacity = 1;
+        loadingContainer.style.display = 'none';
+      }, 500);
     }
+  }, intervalDuration);
+}
 
     // Open iframe popup for buttons
     function openIframe(url) {
